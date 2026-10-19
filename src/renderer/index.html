@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self' https://www.youtube.com https://s.ytimg.com; frame-src https://www.youtube-nocookie.com https://www.youtube.com; img-src 'self' https://i.ytimg.com data:; style-src 'self' 'unsafe-inline'; connect-src 'self'"
+    />
+    <title>Lofi Tray</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="app">
+      <div class="grip" aria-hidden="true"><span></span></div>
+      <header class="top">
+        <div class="brand">
+          <img src="/assets/icon-64.png" alt="" />
+          <div>
+            <h1>Lofi Tray</h1>
+            <p id="count">Chargement des lives…</p>
+          </div>
+        </div>
+        <div class="top-actions">
+          <button class="icon-btn" id="refresh" title="Actualiser la liste">
+            <svg viewBox="0 0 24 24"><path d="M20 11a8 8 0 1 0-2.3 5.7M20 4v7h-7" /></svg>
+          </button>
+          <button class="icon-btn" id="settingsBtn" title="Réglages">
+            <svg viewBox="0 0 24 24">
+              <path d="M4 7h10M18 7h2M4 17h4M12 17h8" />
+              <circle cx="16" cy="7" r="2" />
+              <circle cx="10" cy="17" r="2" />
+            </svg>
+          </button>
+          <button class="icon-btn" id="hide" title="Cacher (la musique continue)">
+            <svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" /></svg>
+          </button>
+        </div>
+      </header>
+
+      <section class="now">
+        <div class="screen" id="screen">
+          <div id="player"></div>
+          <div class="placeholder" id="placeholder">
+            <span class="moon"></span>
+            <p>Choisis un live pour commencer</p>
+          </div>
+          <div class="screen-msg" id="screenMsg" hidden>
+            <p id="screenMsgText"></p>
+            <button class="pill" id="screenMsgYt">Ouvrir sur YouTube</button>
+          </div>
+        </div>
+
+        <div class="now-row">
+          <div class="now-text">
+            <div class="now-status" id="nowStatus"><span class="dot"></span><span>En pause</span></div>
+            <div class="now-title" id="nowTitle">Aucun live sélectionné</div>
+            <div class="now-sub" id="nowSub">La musique continue même fenêtre fermée</div>
+          </div>
+          <button class="play" id="play" title="Lecture / pause (Espace)">
+            <svg class="i-play" viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z" /></svg>
+            <svg class="i-pause" viewBox="0 0 24 24"><path d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z" /></svg>
+            <span class="spinner"></span>
+          </button>
+        </div>
+
+        <div class="volume">
+          <button class="icon-btn" id="mute" title="Couper le son">
+            <svg class="i-vol" viewBox="0 0 24 24">
+              <path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" />
+              <path class="wave1" d="M15.5 9a4 4 0 0 1 0 6" />
+              <path class="wave2" d="M18 6.5a7.5 7.5 0 0 1 0 11" />
+            </svg>
+            <svg class="i-muted" viewBox="0 0 24 24">
+              <path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" />
+              <path d="M16 9.5l5 5M21 9.5l-5 5" />
+            </svg>
+          </button>
+          <input type="range" id="volume" min="0" max="100" step="1" aria-label="Volume" />
+          <span class="vol-value" id="volValue">60</span>
+          <button class="icon-btn" id="openYt" title="Ouvrir sur YouTube">
+            <svg viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5" /></svg>
+          </button>
+        </div>
+      </section>
+
+      <div class="search">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5" /><path d="M16 16l4 4" /></svg>
+        <input id="search" type="search" placeholder="Rechercher un live…" autocomplete="off" />
+      </div>
+
+      <div class="banner" id="banner" hidden></div>
+      <ul class="list" id="list"></ul>
+
+      <div class="sheet-backdrop" id="sheetBackdrop" hidden></div>
+      <section class="sheet" id="settings" aria-hidden="true">
+        <div class="sheet-head">
+          <h2>Réglages</h2>
+          <button class="icon-btn" id="settingsClose" title="Fermer">
+            <svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18" /></svg>
+          </button>
+        </div>
+        <label class="toggle">
+          <span>
+            <strong>Lancer au démarrage de Windows</strong>
+            <small>L'app démarre discrètement dans les icônes cachées</small>
+          </span>
+          <input type="checkbox" id="optLogin" />
+          <i></i>
+        </label>
+        <label class="toggle">
+          <span>
+            <strong>Reprendre la musique au lancement</strong>
+            <small>Relance automatiquement le dernier live écouté</small>
+          </span>
+          <input type="checkbox" id="optAutoplay" />
+          <i></i>
+        </label>
+        <div class="setting-row">
+          <span>
+            <strong>Position de la fenêtre</strong>
+            <small id="positionInfo">Glisse la barre du haut pour la déplacer</small>
+          </span>
+          <button class="pill" id="resetPosition">Replacer</button>
+        </div>
+        <p class="tip">Astuce : clic molette sur l'icône = lecture / pause, clic droit = menu rapide.</p>
+        <div class="sheet-actions">
+          <button class="pill" id="openChannel">Chaîne Lofi Girl</button>
+          <button class="pill danger" id="quit">Quitter Lofi Tray</button>
+        </div>
+        <p class="version" id="version"></p>
+      </section>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>

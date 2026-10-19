@@ -1,0 +1,39 @@
+{
+  "name": "lofi-tray",
+  "productName": "Lofi Tray",
+  "version": "1.0.0",
+  "description": "Les lives Lofi Girl dans la zone de notification de Windows",
+  "main": "src/main.js",
+  "author": "viraille",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "start": "electron .",
+    "build": "node scripts/build.js"
+  },
+  "build": {
+    "appId": "com.viraille.lofitray",
+    "productName": "Lofi Tray",
+    "files": [
+      "src/**/*",
+      "assets/**/*"
+    ],
+    "win": {
+      "target": [
+        "nsis",
+        "portable"
+      ],
+      "icon": "assets/icon.ico"
+    },
+    "nsis": {
+      "oneClick": true,
+      "perMachine": false,
+      "createDesktopShortcut": false,
+      "createStartMenuShortcut": true
+    }
+  },
+  "devDependencies": {
+    "electron": "^44.9.0",
+    "electron-builder": "^26.15.3"
+  }
+}
