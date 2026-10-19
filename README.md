@@ -1,50 +1,61 @@
 # Lofi Tray 🎧
 
-Petite app Windows qui vit dans la zone de notification (les icônes cachées à côté de l'horloge)
-et joue les lives de [Lofi Girl](https://www.youtube.com/@LofiGirl/streams) en arrière-plan.
+A small Windows app that lives in the notification area (the hidden icons next to the clock)
+and plays [Lofi Girl](https://www.youtube.com/@LofiGirl/streams) live streams in the background.
 
-- **Clic gauche** sur l'icône : ouvre la liste des lives en cours (miniature, titre, nombre d'auditeurs).
-- **Clic molette** : lecture / pause.
-- **Clic droit** : menu rapide (lecture/pause, changer de live, lancement au démarrage, quitter).
-- La musique continue quand la fenêtre est fermée. Fermer la fenêtre ≠ quitter l'app.
-- **Glisser la barre du haut** pour déplacer la fenêtre : sa position est retenue
-  (Réglages → « Replacer » pour la remettre près de l'icône).
-- Molette de la souris sur le lecteur = volume. `Espace` = lecture/pause, `/` = recherche, `Échap` = fermer.
+- **Left click** the icon: opens the list of live streams (thumbnail, title, listener count).
+- **Middle click**: play / pause.
+- **Right click**: quick menu (play/pause, switch stream, launch at startup, quit).
+- Music keeps playing when the window is closed. Closing the window ≠ quitting the app.
+- **Drag the top bar** to move the window: its position is remembered
+  (Settings → "Replacer" puts it back next to the icon).
+- Mouse wheel over the player = volume. `Space` = play/pause, `/` = search, `Esc` = close.
 
-La liste est lue directement sur la page « En direct » de la chaîne (pas de clé d'API) et se met
-à jour toute seule toutes les 5 minutes, même fenêtre fermée : les lives terminés disparaissent,
-les nouveaux apparaissent. Si le live en cours s'arrête et que Lofi Girl le relance avec un
-nouveau lien, l'app bascule dessus automatiquement.
+The interface is in French.
 
-L'icône utilise le logo de Lofi Girl (`assets/lofigirl-logo.png`, tiré de lofigirl.com) :
-c'est leur marque, à garder pour un usage perso.
+The list is read straight from the channel's "Live" page (no API key needed) and refreshes
+on its own every 5 minutes, even with the window closed: ended streams disappear, new ones show
+up. If the current stream stops and Lofi Girl restarts it under a new link, the app switches
+to it automatically.
 
-## Lancer en mode développement
+The icon uses the Lofi Girl logo (`assets/lofigirl-logo.png`, taken from lofigirl.com):
+it is their trademark, keep it for personal use.
+
+## Download
+
+Grab the latest version from the [Releases](https://github.com/viraille/lofi-tray/releases/latest) page:
+
+- `LofiTray-Setup-<version>.exe`: installer (adds a Start menu shortcut);
+- `LofiTray-portable-<version>.exe`: portable version, no install needed.
+
+The executables are not signed: if Windows SmartScreen shows "Windows protected your PC",
+click "More info" then "Run anyway".
+
+## Run in development mode
 
 ```bash
 npm install
 npm start
 ```
 
-## Créer l'exécutable
+## Build the executable
 
 ```bash
 npm run build
 ```
 
-La version est la date et l'heure du build, au format `jour.mois.année.heure` (ex. `19.10.2026.20`),
-affichée en bas des Réglages. Le dossier `dist/` contient alors :
+The version is the build date and time, formatted `day.month.year.hour` (e.g. `19.10.2026.20`),
+and is shown at the bottom of the Settings panel. The installer and the portable version end up
+in `dist/`.
 
-- `LofiTray-Setup-<version>.exe` : installeur (raccourci dans le menu Démarrer) ;
-- `LofiTray-portable-<version>.exe` : version portable, sans installation.
+## Project layout
 
-## Structure
-
-| Fichier | Rôle |
+| File | Role |
 | --- | --- |
-| `src/main.js` | Icône de la zone de notification, fenêtre popup, menu, lancement au démarrage |
-| `src/youtube.js` | Récupère et lit la liste des lives Lofi Girl |
-| `src/renderer/` | Interface (HTML/CSS/JS) et lecteur YouTube intégré |
-| `scripts/make-icons.ps1` | Génère les icônes dans `assets/` |
+| `src/main.js` | Notification area icon, popup window, menu, launch at startup |
+| `src/youtube.js` | Fetches and parses the list of Lofi Girl live streams |
+| `src/renderer/` | Interface (HTML/CSS/JS) and embedded YouTube player |
+| `scripts/build.js` | Windows build with the date-based version |
+| `scripts/make-icons.ps1` | Generates the icons in `assets/` |
 
-Les réglages (volume, dernier live écouté…) sont dans `%APPDATA%\Lofi Tray\settings.json`.
+Settings (volume, last stream played…) are stored in `%APPDATA%\Lofi Tray\settings.json`.
