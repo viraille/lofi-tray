@@ -110,5 +110,28 @@ Write-Ico (Join-Path $assets 'icon.ico') @(16, 24, 32, 48, 64, 128, 256)
 Write-Ico (Join-Path $assets 'tray.ico') @(16, 20, 24, 32, 40, 48, 64) 0.94
 [System.IO.File]::WriteAllBytes((Join-Path $assets 'icon-64.png'), (Get-PngBytes 64))
 [System.IO.File]::WriteAllBytes((Join-Path $assets 'icon.png'), (Get-PngBytes 512))
+
+# Android : premier plan de l'icône adaptative (logo seul sur fond transparent, 108 dp,
+# dans la zone sûre de 66 dp). Le dégradé de fond est dans res/drawable/ic_launcher_background.xml.
+$res = Join-Path $PSScriptRoot '..\android\app\src\main\res'
+$densities = @{ 'mdpi' = 108; 'hdpi' = 162; 'xhdpi' = 216; 'xxhdpi' = 324; 'xxxhdpi' = 432 }
+foreach ($density in $densities.Keys) {
+    $size = $densities[$density]
+    $bmp = New-Object System.Drawing.Bitmap $size, $size, ([System.Drawing.Imaging.PixelFormat]::Format32bppArgb)
+    $g = [System.Drawing.Graphics]::FromImage($bmp)
+    $g.Clear([System.Drawing.Color]::Transparent)
+    $g.SmoothingMode = [System.Drawing.Drawing2D.SmoothingMode]::AntiAlias
+    $g.InterpolationMode = [System.Drawing.Drawing2D.InterpolationMode]::HighQualityBicubic
+    $g.PixelOffsetMode = [System.Drawing.Drawing2D.PixelOffsetMode]::HighQuality
+    $logoSize = $size * 64 / 108
+    $offset = ($size - $logoSize) / 2
+    $g.DrawImage($script:logo, [single]$offset, [single]$offset, [single]$logoSize, [single]$logoSize)
+    $g.Dispose()
+    $dir = Join-Path $res "mipmap-$density"
+    New-Item -ItemType Directory -Force $dir | Out-Null
+    $bmp.Save((Join-Path $dir 'ic_launcher_foreground.png'), [System.Drawing.Imaging.ImageFormat]::Png)
+    $bmp.Dispose()
+}
+
 $script:logo.Dispose()
 Write-Host "Icons written to $assets"

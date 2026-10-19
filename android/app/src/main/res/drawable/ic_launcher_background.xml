@@ -1,0 +1,7 @@
+<!-- Même dégradé violet -> rose que l'icône de l'app PC. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+    <gradient
+        android:angle="315"
+        android:endColor="#FFFF8FAB"
+        android:startColor="#FF6A4CF0" />
+</shape>

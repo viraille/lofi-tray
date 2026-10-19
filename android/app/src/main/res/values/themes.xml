@@ -1,0 +1,9 @@
+<resources>
+    <style name="Theme.Lofi" parent="android:Theme.Material.NoActionBar">
+        <item name="android:windowBackground">@drawable/window_background</item>
+        <item name="android:statusBarColor">#FF1A1433</item>
+        <item name="android:navigationBarColor">#FF120E24</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:colorAccent">#FFFFB38A</item>
+    </style>
+</resources>

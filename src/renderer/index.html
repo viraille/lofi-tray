@@ -2,6 +2,7 @@
 <html lang="fr">
   <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta
       http-equiv="Content-Security-Policy"
       content="default-src 'self'; script-src 'self' https://www.youtube.com https://s.ytimg.com; frame-src https://www.youtube-nocookie.com https://www.youtube.com; img-src 'self' https://i.ytimg.com data:; style-src 'self' 'unsafe-inline'; connect-src 'self'"
@@ -11,7 +12,7 @@
   </head>
   <body>
     <div class="app">
-      <div class="grip" aria-hidden="true"><span></span></div>
+      <div class="grip desktop-only" aria-hidden="true"><span></span></div>
       <header class="top">
         <div class="brand">
           <img src="/assets/icon-64.png" alt="" />
@@ -31,7 +32,7 @@
               <circle cx="10" cy="17" r="2" />
             </svg>
           </button>
-          <button class="icon-btn" id="hide" title="Cacher (la musique continue)">
+          <button class="icon-btn desktop-only" id="hide" title="Cacher (la musique continue)">
             <svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" /></svg>
           </button>
         </div>
@@ -99,12 +100,21 @@
             <svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18" /></svg>
           </button>
         </div>
-        <label class="toggle">
+        <label class="toggle desktop-only">
           <span>
             <strong>Lancer au démarrage de Windows</strong>
             <small>L'app démarre discrètement dans les icônes cachées</small>
           </span>
           <input type="checkbox" id="optLogin" />
+          <i></i>
+        </label>
+        <label class="toggle android-only">
+          <span>
+            <strong>Économiser les données</strong>
+            <small>Vidéo en 144p : environ 85 Mo/h au lieu de 200 Mo/h</small>
+            <small id="qualityInfo"></small>
+          </span>
+          <input type="checkbox" id="optDataSaver" />
           <i></i>
         </label>
         <label class="toggle">
@@ -115,14 +125,14 @@
           <input type="checkbox" id="optAutoplay" />
           <i></i>
         </label>
-        <div class="setting-row">
+        <div class="setting-row desktop-only">
           <span>
             <strong>Position de la fenêtre</strong>
             <small id="positionInfo">Glisse la barre du haut pour la déplacer</small>
           </span>
           <button class="pill" id="resetPosition">Replacer</button>
         </div>
-        <p class="tip">Astuce : clic molette sur l'icône = lecture / pause, clic droit = menu rapide.</p>
+        <p class="tip desktop-only">Astuce : clic molette sur l'icône = lecture / pause, clic droit = menu rapide.</p>
         <div class="sheet-actions">
           <button class="pill" id="openChannel">Chaîne Lofi Girl</button>
           <button class="pill danger" id="quit">Quitter Lofi Tray</button>
@@ -131,6 +141,8 @@
       </section>
     </div>
 
+    <!-- PC : rien à faire (l'API vient du preload). Android remplace ce fichier. -->
+    <script src="platform.js"></script>
     <script src="app.js"></script>
   </body>
 </html>

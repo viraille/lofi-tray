@@ -9,7 +9,8 @@
   "private": true,
   "scripts": {
     "start": "electron .",
-    "build": "node scripts/build.js"
+    "build": "node scripts/build.js",
+    "build:android": "node scripts/build-android.js"
   },
   "build": {
     "appId": "com.viraille.lofitray",

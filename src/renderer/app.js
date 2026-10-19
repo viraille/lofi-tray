@@ -295,6 +295,15 @@ async function recoverStream() {
   else showScreenMsg('Ce live est terminé. Choisis-en un autre dans la liste !', false);
 }
 
+// Recrée le lecteur, par exemple pour appliquer une autre qualité vidéo (Android).
+function rebuildPlayer() {
+  if (!player || !state.current) return;
+  const resume = state.playing || state.buffering;
+  player.destroy();
+  player = null;
+  play(state.current.id, resume);
+}
+
 function togglePlay() {
   if (!state.current) {
     if (state.lives[0]) play(state.lives[0].id, true);
@@ -388,6 +397,11 @@ function renderNow() {
 function renderSettings() {
   $('optLogin').checked = !!state.settings.openAtLogin;
   $('optAutoplay').checked = !!state.settings.autoplay;
+  $('optDataSaver').checked = !!state.settings.dataSaver;
+  const quality = { tiny: '144p', small: '240p', medium: '360p', large: '480p', hd720: '720p', hd1080: '1080p' }[
+    player?.getPlaybackQuality?.()
+  ];
+  $('qualityInfo').textContent = quality ? `Qualité en cours : ${quality}` : '';
   const moved = !!state.settings.position;
   $('positionInfo').textContent = moved
     ? "Position enregistrée. « Replacer » la remet près de l'icône"
@@ -413,6 +427,7 @@ function hideScreenMsg() {
 }
 
 function openSettings(open) {
+  if (open) renderSettings();
   $('settings').classList.toggle('open', open);
   $('settings').setAttribute('aria-hidden', String(!open));
   $('sheetBackdrop').hidden = !open;
@@ -473,6 +488,11 @@ function bindUi() {
     state.settings = await api.resetPosition();
     renderSettings();
   });
+  $('optDataSaver').addEventListener('change', async (e) => {
+    state.settings = await api.setSettings({ dataSaver: e.target.checked });
+    renderSettings();
+    rebuildPlayer();
+  });
   $('optAutoplay').addEventListener('change', async (e) => {
     state.settings = await api.setSettings({ autoplay: e.target.checked });
     renderSettings();
@@ -497,7 +517,10 @@ function bindUi() {
   });
 
   api.onCommand((name, arg) => {
+    const active = state.playing || state.buffering;
     if (name === 'toggle') togglePlay();
+    else if (name === 'pause' && active) togglePlay();
+    else if (name === 'resume' && !active) togglePlay();
     else if (name === 'play' && arg) play(arg, true);
   });
   api.onLivesUpdated(applyLives);

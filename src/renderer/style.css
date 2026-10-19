@@ -740,3 +740,55 @@ input[type='range']:focus-visible {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Android (téléphone) ------------------------------------------------------ */
+
+html.android .desktop-only {
+  display: none !important;
+}
+html.android body {
+  font-size: 14px;
+  -webkit-tap-highlight-color: transparent;
+}
+html.android .app {
+  border: 0;
+  border-radius: 0;
+}
+html.android .top {
+  padding-top: 12px;
+}
+html.android .icon-btn {
+  width: 40px;
+  height: 40px;
+}
+/* Pas de survol au doigt : on montre l'appui à la place. */
+html.android .icon-btn:hover {
+  background: none;
+  color: var(--muted);
+}
+html.android .icon-btn:active {
+  background: var(--surface-hover);
+}
+html.android .live:hover {
+  background: none;
+}
+html.android .live.active {
+  background: var(--surface-active);
+}
+html.android .live:active {
+  background: var(--surface-hover);
+}
+html.android .thumb {
+  width: 88px;
+  height: 49.5px;
+}
+html.android .live-title {
+  font-size: 14px;
+}
+/* Le premier réglage visible n'a pas de trait au-dessus. */
+html.android .toggle.desktop-only + .toggle {
+  border-top: 0;
+}
+html:not(.android) .android-only {
+  display: none !important;
+}

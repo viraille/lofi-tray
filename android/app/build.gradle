@@ -1,0 +1,79 @@
+import java.text.SimpleDateFormat
+
+plugins {
+    id 'com.android.application'
+}
+
+// Version = date et heure du build, jour.mois.année.heure (comme l'app PC).
+def buildDate = new Date()
+def versionLabel = new SimpleDateFormat('dd.MM.yyyy.HH').format(buildDate)
+def versionNumber = new SimpleDateFormat('yyMMddHH').format(buildDate).toInteger()
+
+// Clé de signature locale (android/keystore.properties, jamais envoyée sur GitHub).
+def keystoreProps = new Properties()
+def keystoreFile = rootProject.file('keystore.properties')
+if (keystoreFile.exists()) keystoreFile.withInputStream { keystoreProps.load(it) }
+
+android {
+    namespace 'com.viraille.lofitray'
+    compileSdk 35
+
+    defaultConfig {
+        applicationId 'com.viraille.lofitray'
+        minSdk 26
+        targetSdk 35
+        versionCode versionNumber
+        versionName versionLabel
+    }
+
+    signingConfigs {
+        release {
+            if (keystoreFile.exists()) {
+                storeFile rootProject.file(keystoreProps['storeFile'])
+                storePassword keystoreProps['storePassword']
+                keyAlias keystoreProps['keyAlias']
+                keyPassword keystoreProps['keyPassword']
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            signingConfig keystoreFile.exists() ? signingConfigs.release : signingConfigs.debug
+        }
+    }
+
+    buildFeatures {
+        buildConfig true
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    sourceSets {
+        main {
+            assets.srcDirs += layout.buildDirectory.dir('generated/lofiWeb').get().asFile
+        }
+    }
+}
+
+dependencies {
+    implementation 'androidx.webkit:webkit:1.12.1'
+}
+
+// L'interface est celle de l'app PC : on la copie depuis ../src à chaque build,
+// avec la version Android de platform.js.
+def syncWeb = tasks.register('syncWeb', Sync) {
+    into layout.buildDirectory.dir('generated/lofiWeb/www')
+    from('../../src/renderer') { exclude 'platform.js' }
+    from('../../src/youtube.js')
+    from('src/main/web')
+    from('../../assets') {
+        include 'icon-64.png', 'lofigirl-logo.png'
+        into 'assets'
+    }
+}
+tasks.named('preBuild') { dependsOn syncWeb }
